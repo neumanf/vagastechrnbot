@@ -10,7 +10,7 @@ function getPostMessage(job: Job) {
 <b>Área:</b> ${job.field}
 <b>Regime:</b> ${job.workType}
 <b>Salário:</b> ${job.salary}
-<b>Data:</b> ${job.date}
+<b>Data:</b> ${job.date.getDate()}/${job.date.getMonth()}/${job.date.getFullYear()}
 `;
 }
 
