@@ -2,6 +2,7 @@ import { JerimumJobsService } from "../services/jerimum-jobs";
 import { bot } from "../core/bot";
 import { config } from "../config";
 import { Job } from "../core/interfaces/job";
+import { PostsService } from "../services/posts";
 
 function getPostMessage(job: Job) {
   return `👨‍💻 <a href="${job.url}">${job.name}</a>
@@ -16,16 +17,23 @@ function getPostMessage(job: Job) {
 
 export async function channelPostRoutine() {
   const jerimumJobsService = new JerimumJobsService();
+  const postsService = new PostsService();
 
-  const jobs = await jerimumJobsService.getJobs();
+  const [postsUrls, jobs] = await Promise.all([
+    postsService.getPostUrls(),
+    jerimumJobsService.getJobs(),
+  ]);
 
   for (const job of jobs) {
+    if (postsUrls.includes(job.url)) continue;
+
     const message = getPostMessage(job);
 
-    await bot.api
-      .sendMessage(config.channelId, message, {
+    await Promise.all([
+      bot.api.sendMessage(config.channelId, message, {
         parse_mode: "HTML",
-      })
-      .catch((e) => console.error(e));
+      }),
+      postsService.updatePostUrls([...postsUrls, job.url]),
+    ]);
   }
 }

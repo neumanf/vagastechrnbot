@@ -28,6 +28,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "@cyclic.sh/dynamodb": "^0.0.33",
     "axios": "^1.2.2",
     "cheerio": "^1.0.0-rc.12",
     "grammy": "^1.13.0",
