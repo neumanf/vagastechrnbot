@@ -2,7 +2,7 @@ import CyclicDB from "@cyclic.sh/dynamodb";
 
 import { config } from "../../config";
 
-const db = CyclicDB(config.dbTable);
+const db = CyclicDB(config.dbName);
 
 export class PostsService {
   async getPostUrls(): Promise<string[]> {
