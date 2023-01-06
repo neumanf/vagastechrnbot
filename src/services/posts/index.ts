@@ -18,4 +18,8 @@ export class PostsService {
       urls,
     });
   }
+
+  async deletePostUrls() {
+    return db.collection("posts").delete("Urls");
+  }
 }
