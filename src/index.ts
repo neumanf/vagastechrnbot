@@ -18,7 +18,7 @@ async function bootstrap() {
     app.use(express.json());
     app.use(webhookCallback(bot, "express"));
 
-    await bot.api.setWebhook(config.cyclicUrl);
+    await bot.api.setWebhook(`${config.cyclicUrl}/${config.botToken}`);
 
     app.listen(config.port, () =>
       console.log(`[BOT] Started successfully on port ${config.port}.`)
