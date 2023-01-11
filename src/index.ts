@@ -1,5 +1,4 @@
 import "dotenv/config";
-import cron from "node-cron";
 import express from "express";
 import { webhookCallback } from "grammy";
 
@@ -9,15 +8,15 @@ import { config } from "./config";
 import { startComposer } from "./commands/start";
 
 async function bootstrap() {
-  cron.schedule(config.routinesCron, channelPostRoutine);
-
   bot.use(startComposer);
 
   if (config.nodeEnv === "production") {
     const app = express();
     app.use(express.json());
-    app.use(webhookCallback(bot, "express"));
 
+    app.get("/channel-post-routine", channelPostRoutine);
+
+    app.use(webhookCallback(bot, "express"));
     await bot.api.setWebhook(`${config.cyclicUrl}/${config.botToken}`);
 
     app.listen(config.port, () =>

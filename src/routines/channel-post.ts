@@ -1,3 +1,5 @@
+import { Request, Response } from "express";
+
 import { JerimumJobsService } from "../services/jerimum-jobs";
 import { bot } from "../core/bot";
 import { config } from "../config";
@@ -15,7 +17,7 @@ function getPostMessage(job: Job) {
 `;
 }
 
-export async function channelPostRoutine() {
+export async function channelPostRoutine(req: Request, res: Response) {
   const jerimumJobsService = new JerimumJobsService();
   const postsService = new PostsService();
 
@@ -36,4 +38,6 @@ export async function channelPostRoutine() {
       postsService.updatePostUrls([...postsUrls, job.url]),
     ]);
   }
+
+  return res.status(200).send({ ok: true });
 }
