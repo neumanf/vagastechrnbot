@@ -21,7 +21,7 @@ export class BackendBrService {
           field: "Desenvolvimento",
           workType: workTypeIsKnown && workTypeIsKnown.name,
           name: post.title,
-          url: post.url,
+          url: post.html_url,
         };
         jobs.push(job);
       }

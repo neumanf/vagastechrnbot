@@ -22,14 +22,14 @@ describe("BackendBrService", () => {
       {
         name: stub[0].title,
         field: "Desenvolvimento",
-        url: stub[0].url,
+        url: stub[0].html_url,
         date: new Date(stub[0].created_at),
         workType: "PJ",
       },
       {
         name: stub[1].title,
         field: "Desenvolvimento",
-        url: stub[1].url,
+        url: stub[1].html_url,
         date: new Date(stub[1].created_at),
         workType: "CLT",
       },
