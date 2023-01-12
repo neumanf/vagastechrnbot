@@ -6,14 +6,9 @@ import { bot } from './core/bot';
 import { channelPostRoutine } from './routines/channel-post';
 import { config } from './config';
 import { startComposer } from './commands/start';
-import { PostsService } from './services';
 
 async function bootstrap() {
     bot.use(startComposer);
-
-    const ps = new PostsService();
-    console.log(await ps.addPost('https://github.com/backend-br/vagas/issues/10547'));
-    console.log(await ps.getPostUrls());
 
     if (config.nodeEnv === 'production') {
         const app = express();
