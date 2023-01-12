@@ -1,9 +1,9 @@
 export interface Job {
   name: string;
-  company: string;
+  company?: string;
   field: string;
-  workType: string;
-  salary: string;
+  workType?: string;
+  salary?: string;
   date: Date;
   url: string;
 }

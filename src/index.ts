@@ -23,7 +23,6 @@ async function bootstrap() {
       console.log(`[BOT] Started successfully on port ${config.port}.`)
     );
   } else {
-    await bot.api.deleteWebhook();
     bot.start({ onStart: () => console.log("[BOT] Started successfully.") });
   }
 }
