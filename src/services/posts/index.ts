@@ -1,25 +1,23 @@
-import CyclicDB from '@cyclic.sh/dynamodb';
+import { createPool } from 'mysql2/promise';
 
 import { config } from '../../config';
 
-const db = CyclicDB(config.dbName);
+const db = createPool(config.dbUrl);
+
+type Post = {
+    url: string;
+};
 
 export class PostsService {
-    async getPostUrls(): Promise<string[]> {
-        const urls = await db.collection('posts').get('Urls');
+    async getPostUrls(): Promise<Post[]> {
+        const [posts] = await db.query('SELECT url from posts');
 
-        if (!urls) return [];
+        if (!posts) return [];
 
-        return urls.props.urls;
+        return posts as Post[];
     }
 
-    async updatePostUrls(urls: string[]) {
-        return db.collection('posts').set('Urls', {
-            urls,
-        });
-    }
-
-    async deletePostUrls() {
-        return db.collection('posts').delete('Urls');
+    async addPost(url: string) {
+        return db.execute('INSERT INTO posts (url) VALUES (?)', [url]);
     }
 }

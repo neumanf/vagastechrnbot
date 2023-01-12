@@ -4,5 +4,5 @@ export const config = {
     port: process.env.PORT ?? 3000,
     botToken: process.env.BOT_TOKEN ?? '',
     channelId: process.env.CHANNEL_ID ?? '',
-    dbName: process.env.CYCLIC_DB ?? '',
+    dbUrl: process.env.DATABASE_URL ?? '',
 };

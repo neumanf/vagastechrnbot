@@ -29,18 +29,19 @@ export async function channelPostRoutine(req: Request, res: Response) {
     const backendBrService = new BackendBrService();
     const postsService = new PostsService();
 
-    const [postsUrls, ...jobs] = await Promise.all([
+    const [posts, ...jobs] = await Promise.all([
         postsService.getPostUrls(),
         jerimumJobsService.getJobs(),
         backendBrService.getJobs(),
     ]);
+    const postsUrls = posts.map((p) => p.url);
 
     for (const job of jobs.flat()) {
         if (postsUrls.includes(job.url)) continue;
 
         const message = getPostMessage(job);
 
-        await postsService.updatePostUrls([...postsUrls, job.url]);
+        await postsService.addPost(job.url);
         await bot.api.sendMessage(config.channelId, message, {
             parse_mode: 'HTML',
         });
