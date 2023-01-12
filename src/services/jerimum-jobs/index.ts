@@ -68,7 +68,7 @@ export class JerimumJobsService {
       .split("/");
     const date = new Date(
       Number(rawDate[2]),
-      Number(rawDate[1]),
+      Number(rawDate[1]) - 1,
       Number(rawDate[0])
     );
     const url = "https://jerimumjobs.imd.ufrn.br" + $(el).attr("href");

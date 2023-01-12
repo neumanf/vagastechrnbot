@@ -3,7 +3,7 @@ import express from "express";
 import { webhookCallback } from "grammy";
 
 import { bot } from "./core/bot";
-import { channelPostRoutine } from "./routines/channel-post";
+import { channelPostRoutine, getPostMessage } from "./routines/channel-post";
 import { config } from "./config";
 import { startComposer } from "./commands/start";
 
@@ -23,6 +23,9 @@ async function bootstrap() {
       console.log(`[BOT] Started successfully on port ${config.port}.`)
     );
   } else {
+    console.log(
+      getPostMessage({ date: new Date(), field: "yo", name: "a", url: "b" })
+    );
     bot.start({ onStart: () => console.log("[BOT] Started successfully.") });
   }
 }

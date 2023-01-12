@@ -9,15 +9,17 @@ import {
   PostsService,
 } from "../services";
 
-function getPostMessage(job: Job) {
+export function getPostMessage(job: Job) {
   return `👨‍💻 <a href="${job.url}">${job.name}</a>
 
-${job.company && `<b>Empresa:</b> ${job.company}`}
+<b>Data:</b> ${job.date.getDate()}/${
+    job.date.getMonth() + 1
+  }/${job.date.getFullYear()}
 <b>Área:</b> ${job.field}
-${job.workType && `<b>Regime:</b> ${job.workType}`}
-${job.salary && `<b>Salário:</b> ${job.salary}`}
-<b>Data:</b> ${job.date.getDate()}/${job.date.getMonth()}/${job.date.getFullYear()}
-`;
+${job.company ? `<b>Empresa:</b> ${job.company}` : ""}
+${job.workType ? `<b>Regime:</b> ${job.workType}` : ""}
+${job.salary ? `<b>Salário:</b> ${job.salary}` : ""}
+`.trim();
 }
 
 export async function channelPostRoutine(req: Request, res: Response) {
