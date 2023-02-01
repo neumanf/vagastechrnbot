@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Job } from '../../core/interfaces/job';
 
 const TECH_FIELDS = [
-    'Banco de dados',
+    'Banco de Dados',
     'Desenvolvimento',
     'DevOps',
     'Infraestrutura/Redes',
