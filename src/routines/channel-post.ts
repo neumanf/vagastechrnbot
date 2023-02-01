@@ -24,6 +24,18 @@ function getPostMessage(job: Job) {
     );
 }
 
+function getProvider(url: string): string {
+    if (url.startsWith('https://jerimumjobs.imd.ufrn.br')) {
+        return 'jerimumjobs';
+    }
+
+    if (url.startsWith('https://github.com/backend-br/vagas')) {
+        return 'backend-br';
+    }
+
+    return '';
+}
+
 export async function channelPostRoutine(req: Request, res: Response) {
     const jerimumJobsService = new JerimumJobsService();
     const backendBrService = new BackendBrService();
@@ -34,14 +46,15 @@ export async function channelPostRoutine(req: Request, res: Response) {
         jerimumJobsService.getJobs(),
         backendBrService.getJobs(),
     ]);
-    const postsUrls = posts.map((p) => p.url);
+    const postsUrls = posts.map((post) => post.url);
 
     for (const job of jobs.flat()) {
         if (postsUrls.includes(job.url)) continue;
 
         const message = getPostMessage(job);
+        const provider = getProvider(job.url);
 
-        await postsService.addPost(job.url);
+        await postsService.addPost(job.url, provider);
         await bot.api.sendMessage(config.channelId, message, {
             parse_mode: 'HTML',
         });

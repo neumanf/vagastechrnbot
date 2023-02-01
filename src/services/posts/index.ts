@@ -10,14 +10,18 @@ type Post = {
 
 export class PostsService {
     async getPostUrls(): Promise<Post[]> {
-        const [posts] = await db.query('SELECT url from posts');
+        const queries = [
+            '(SELECT url FROM posts WHERE provider="jerimumjobs" ORDER BY id DESC LIMIT 0, 10)',
+            '(SELECT url FROM posts WHERE provider="backend-br" ORDER BY id DESC LIMIT 0, 10)',
+        ];
+        const [posts] = await db.query(queries.join(' UNION '));
 
         if (!posts) return [];
 
         return posts as Post[];
     }
 
-    async addPost(url: string) {
-        return db.execute('INSERT INTO posts (url) VALUES (?)', [url]);
+    async addPost(url: string, provider: string) {
+        return db.execute('INSERT INTO posts (url, provider) VALUES (?, ?)', [url, provider]);
     }
 }
