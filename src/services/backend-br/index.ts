@@ -8,7 +8,7 @@ export class BackendBrService {
 
         try {
             const { data: posts } = await axios.get(
-                'https://api.github.com/repos/backend-br/vagas/issues?state=open&labels=Remoto'
+                'https://api.github.com/repos/backend-br/vagas/issues?state=open&labels=Remoto&per_page=10'
             );
 
             for (const post of posts) {
