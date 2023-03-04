@@ -4,6 +4,7 @@ export interface Job {
     field: string;
     workType?: string;
     salary?: string;
+    level?: string;
     date: Date;
     url: string;
 }
