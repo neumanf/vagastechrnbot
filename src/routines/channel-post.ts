@@ -18,6 +18,9 @@ export async function channelPostRoutine(req: Request, res: Response) {
     const postsUrls = posts.map((post) => post.url);
 
     for (const job of jobs.flat()) {
+        const wasPostedToday = job.date.toDateString() === new Date().toDateString();
+
+        if (!wasPostedToday) continue;
         if (postsUrls.includes(job.url)) continue;
 
         const message = getPostMessage(job);

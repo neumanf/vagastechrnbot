@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 export const config = {
     nodeEnv: process.env.NODE_ENV ?? '',
     cyclicUrl: process.env.CYCLIC_URL ?? '',
