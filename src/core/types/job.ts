@@ -1,4 +1,4 @@
-export interface Job {
+export type Job = {
     name: string;
     company?: string;
     field: string;
@@ -7,4 +7,4 @@ export interface Job {
     level?: string;
     date: Date;
     url: string;
-}
+};

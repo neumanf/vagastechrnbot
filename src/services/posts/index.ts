@@ -1,27 +1,25 @@
-import { createPool } from 'mysql2/promise';
-
-import { config } from '../../config';
-
-const db = createPool(config.dbUrl);
-
-type Post = {
-    url: string;
-};
+import { Posts } from '../../core/database';
+import { Post } from '../../core/types/post';
 
 export class PostsService {
-    async getPostUrls(): Promise<Post[]> {
-        const queries = [
-            '(SELECT url FROM posts WHERE provider="jerimumjobs" ORDER BY id DESC LIMIT 0, 10)',
-            '(SELECT url FROM posts WHERE provider="backend-br" ORDER BY id DESC LIMIT 0, 10)',
-        ];
-        const [posts] = await db.query(queries.join(' UNION '));
+    async getPostUrls() {
+        const PROVIDERS = ['jerimumjobs', 'backend-br'];
 
-        if (!posts) return [];
-
-        return posts as Post[];
+        return Posts()
+            .select('url')
+            .union(
+                PROVIDERS.map((p) =>
+                    Posts()
+                        .select('url')
+                        .where({ provider: p })
+                        .orderBy('id', 'desc')
+                        .limit(10)
+                ),
+                true
+            );
     }
 
-    async addPost(url: string, provider: string) {
-        return db.execute('INSERT INTO posts (url, provider) VALUES (?, ?)', [url, provider]);
+    async addPost(post: Omit<Post, 'id'>) {
+        return Posts().insert(post);
     }
 }

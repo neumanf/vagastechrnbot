@@ -2,9 +2,12 @@ export const fullResponseStub = [
     {
         url: 'https://api.github.com/repos/backend-br/vagas/issues/10572',
         repository_url: 'https://api.github.com/repos/backend-br/vagas',
-        labels_url: 'https://api.github.com/repos/backend-br/vagas/issues/10572/labels{/name}',
-        comments_url: 'https://api.github.com/repos/backend-br/vagas/issues/10572/comments',
-        events_url: 'https://api.github.com/repos/backend-br/vagas/issues/10572/events',
+        labels_url:
+            'https://api.github.com/repos/backend-br/vagas/issues/10572/labels{/name}',
+        comments_url:
+            'https://api.github.com/repos/backend-br/vagas/issues/10572/comments',
+        events_url:
+            'https://api.github.com/repos/backend-br/vagas/issues/10572/events',
         html_url: 'https://github.com/backend-br/vagas/issues/10572',
         id: 1529484497,
         node_id: 'I_kwDOBew1iM5bKhTR',
@@ -19,14 +22,20 @@ export const fullResponseStub = [
             url: 'https://api.github.com/users/Vinirm1777',
             html_url: 'https://github.com/Vinirm1777',
             followers_url: 'https://api.github.com/users/Vinirm1777/followers',
-            following_url: 'https://api.github.com/users/Vinirm1777/following{/other_user}',
-            gists_url: 'https://api.github.com/users/Vinirm1777/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/Vinirm1777/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/Vinirm1777/subscriptions',
+            following_url:
+                'https://api.github.com/users/Vinirm1777/following{/other_user}',
+            gists_url:
+                'https://api.github.com/users/Vinirm1777/gists{/gist_id}',
+            starred_url:
+                'https://api.github.com/users/Vinirm1777/starred{/owner}{/repo}',
+            subscriptions_url:
+                'https://api.github.com/users/Vinirm1777/subscriptions',
             organizations_url: 'https://api.github.com/users/Vinirm1777/orgs',
             repos_url: 'https://api.github.com/users/Vinirm1777/repos',
-            events_url: 'https://api.github.com/users/Vinirm1777/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/Vinirm1777/received_events',
+            events_url:
+                'https://api.github.com/users/Vinirm1777/events{/privacy}',
+            received_events_url:
+                'https://api.github.com/users/Vinirm1777/received_events',
             type: 'User',
             site_admin: false,
         },
@@ -74,16 +83,20 @@ export const fullResponseStub = [
             'rocket': 0,
             'eyes': 0,
         },
-        timeline_url: 'https://api.github.com/repos/backend-br/vagas/issues/10572/timeline',
+        timeline_url:
+            'https://api.github.com/repos/backend-br/vagas/issues/10572/timeline',
         performed_via_github_app: null,
         state_reason: null,
     },
     {
         url: 'https://api.github.com/repos/backend-br/vagas/issues/10571',
         repository_url: 'https://api.github.com/repos/backend-br/vagas',
-        labels_url: 'https://api.github.com/repos/backend-br/vagas/issues/10571/labels{/name}',
-        comments_url: 'https://api.github.com/repos/backend-br/vagas/issues/10571/comments',
-        events_url: 'https://api.github.com/repos/backend-br/vagas/issues/10571/events',
+        labels_url:
+            'https://api.github.com/repos/backend-br/vagas/issues/10571/labels{/name}',
+        comments_url:
+            'https://api.github.com/repos/backend-br/vagas/issues/10571/comments',
+        events_url:
+            'https://api.github.com/repos/backend-br/vagas/issues/10571/events',
         html_url: 'https://github.com/backend-br/vagas/issues/10571',
         id: 1529236990,
         node_id: 'I_kwDOBew1iM5bJk3-',
@@ -97,15 +110,23 @@ export const fullResponseStub = [
             gravatar_id: '',
             url: 'https://api.github.com/users/victor-pilotto',
             html_url: 'https://github.com/victor-pilotto',
-            followers_url: 'https://api.github.com/users/victor-pilotto/followers',
-            following_url: 'https://api.github.com/users/victor-pilotto/following{/other_user}',
-            gists_url: 'https://api.github.com/users/victor-pilotto/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/victor-pilotto/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/victor-pilotto/subscriptions',
-            organizations_url: 'https://api.github.com/users/victor-pilotto/orgs',
+            followers_url:
+                'https://api.github.com/users/victor-pilotto/followers',
+            following_url:
+                'https://api.github.com/users/victor-pilotto/following{/other_user}',
+            gists_url:
+                'https://api.github.com/users/victor-pilotto/gists{/gist_id}',
+            starred_url:
+                'https://api.github.com/users/victor-pilotto/starred{/owner}{/repo}',
+            subscriptions_url:
+                'https://api.github.com/users/victor-pilotto/subscriptions',
+            organizations_url:
+                'https://api.github.com/users/victor-pilotto/orgs',
             repos_url: 'https://api.github.com/users/victor-pilotto/repos',
-            events_url: 'https://api.github.com/users/victor-pilotto/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/victor-pilotto/received_events',
+            events_url:
+                'https://api.github.com/users/victor-pilotto/events{/privacy}',
+            received_events_url:
+                'https://api.github.com/users/victor-pilotto/received_events',
             type: 'User',
             site_admin: false,
         },
@@ -144,7 +165,8 @@ export const fullResponseStub = [
             'rocket': 0,
             'eyes': 0,
         },
-        timeline_url: 'https://api.github.com/repos/backend-br/vagas/issues/10571/timeline',
+        timeline_url:
+            'https://api.github.com/repos/backend-br/vagas/issues/10571/timeline',
         performed_via_github_app: null,
         state_reason: null,
     },

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { Job } from '../../core/interfaces/job';
+import { Job } from '../../core/types/job';
 
 export class BackendBrService {
     async getJobs(): Promise<Job[]> {
@@ -35,13 +35,17 @@ export class BackendBrService {
             switch (label.name) {
                 case 'PJ':
                 case 'CLT': {
-                    job.workType = job.workType ? `${job.workType}, ${label.name}` : label.name;
+                    job.workType = job.workType
+                        ? `${job.workType}, ${label.name}`
+                        : label.name;
                     break;
                 }
                 case 'Júnior':
                 case 'Pleno':
                 case 'Sênior': {
-                    job.level = job.level ? `${job.level}, ${label.name}` : label.name;
+                    job.level = job.level
+                        ? `${job.level}, ${label.name}`
+                        : label.name;
                     break;
                 }
                 default:
