@@ -7,17 +7,20 @@ import {
     BackendBrService,
     JerimumJobsService,
     PostsService,
+    FrontendBrService,
 } from '../services';
 
 export async function channelPostRoutine(req: Request, res: Response) {
     const jerimumJobsService = new JerimumJobsService();
     const backendBrService = new BackendBrService();
+    const frontendBrService = new FrontendBrService();
     const postsService = new PostsService();
 
     const [posts, ...jobs] = await Promise.all([
         postsService.getPostUrls(),
         jerimumJobsService.getJobs(),
         backendBrService.getJobs(),
+        frontendBrService.getJobs(),
     ]);
     const postsUrls = posts.map((post) => post.url);
 
@@ -72,6 +75,10 @@ function getProvider(url: string): string {
 
     if (url.startsWith('https://github.com/backend-br/vagas')) {
         return 'backend-br';
+    }
+
+    if (url.startsWith('https://github.com/frontendbr/vagas')) {
+        return 'frontendbr';
     }
 
     return '';
