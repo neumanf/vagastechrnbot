@@ -34,6 +34,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "@grammyjs/transformer-throttler": "^1.2.1",
     "axios": "^1.2.2",
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.0.3",
