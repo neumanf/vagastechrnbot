@@ -2,6 +2,7 @@ import * as cheerio from 'cheerio';
 import axios from 'axios';
 
 import { Job } from '../../core/types/job';
+import { JobService } from '../job-service';
 
 const TECH_FIELDS = [
     'Banco de Dados',
@@ -11,14 +12,15 @@ const TECH_FIELDS = [
     'Testes',
 ];
 
-export class JerimumJobsService {
+export class JerimumJobsService implements JobService {
+    private url =
+        'https://jerimumjobs.imd.ufrn.br/jerimumjobs/oportunidade/listar';
+
     async getJobs(): Promise<Job[]> {
         const jobs: Job[] = [];
 
         try {
-            const { data } = await axios.get(
-                'https://jerimumjobs.imd.ufrn.br/jerimumjobs/oportunidade/listar'
-            );
+            const { data } = await axios.get(this.url);
             const $ = cheerio.load(data);
             const posts = $('#oportunidadesDiv > div > a');
 

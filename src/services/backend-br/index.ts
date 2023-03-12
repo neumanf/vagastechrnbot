@@ -1,15 +1,17 @@
 import axios from 'axios';
 
 import { Job } from '../../core/types/job';
+import { JobService } from '../job-service';
 
-export class BackendBrService {
+export class BackendBrService implements JobService {
+    private url =
+        'https://api.github.com/repos/backend-br/vagas/issues?state=open&labels=Remoto&per_page=10';
+
     async getJobs(): Promise<Job[]> {
         const jobs: Job[] = [];
 
         try {
-            const { data: posts } = await axios.get(
-                'https://api.github.com/repos/backend-br/vagas/issues?state=open&labels=Remoto&per_page=10'
-            );
+            const { data: posts } = await axios.get(this.url);
 
             for (const post of posts) {
                 const job = this.buildJob(post);
