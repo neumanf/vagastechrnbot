@@ -17,3 +17,6 @@ jobs:
 
       - name: Run Docker containers
         run: docker compose up -d
+
+      - name: Run migrations
+        run: docker exec vagastechrnbot-bot-1 /bin/sh -c "npm run migrate"
