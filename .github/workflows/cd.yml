@@ -19,7 +19,7 @@ jobs:
         run: docker compose up -d
 
       - name: Set environment variables
-        run: cp $HOME/envs/vagastechrnbot.env .
+        run: cp $HOME/envs/vagastechrnbot.env ./.env
 
       - name: Run migrations
         run: npm run migrate
