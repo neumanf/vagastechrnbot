@@ -12,20 +12,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run Docker Containers
-        run: docker compose up -d
-
       - name: Set environment variables
         run: cp $HOME/envs/vagastechrnbot.env ./.env
 
-      - name: Run migrations
-        run: npm run migrate
-
-      - name: Build bot
-        run: npm run build
-
-      - name: Run bot
-        run: npm start
+      - name: Run Docker containers
+        run: docker compose up -d
