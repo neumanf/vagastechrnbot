@@ -3,13 +3,11 @@ import knex from 'knex';
 import { config } from '../../config';
 import { Post } from '../types/post';
 
-const mysql = knex({
-    client: 'mysql2',
-    connection: {
-        uri: config.dbUrl,
-    },
+const postgres = knex({
+    client: 'pg',
+    connection: config.dbUrl,
 });
 
-export const Posts = () => mysql<Post>('posts');
+export const Posts = () => postgres<Post>('posts');
 
-export default mysql;
+export default postgres;

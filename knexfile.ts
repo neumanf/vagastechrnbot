@@ -5,20 +5,16 @@ import { config as botConfig } from './src/config';
 
 const config: { [key: string]: Knex.Config } = {
     development: {
-        client: 'mysql2',
-        connection: {
-            uri: botConfig.dbUrl,
-        },
+        client: 'pg',
+        connection: botConfig.dbUrl,
         migrations: {
             directory: './src/core/database/migrations',
         },
     },
 
     production: {
-        client: 'mysql2',
-        connection: {
-            uri: botConfig.dbUrl,
-        },
+        client: 'pg',
+        connection: botConfig.dbUrl,
         migrations: {
             directory: './src/core/database/migrations',
         },
