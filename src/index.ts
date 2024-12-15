@@ -15,7 +15,7 @@ async function bootstrap() {
     await bot.start({
         onStart: () => {
             logger.info('Bot started successfully');
-            schedule.scheduleJob('* * * * *', channelPostRoutine);
+            schedule.scheduleJob('0 */3 * * *', channelPostRoutine);
         },
     });
 }
