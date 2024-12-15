@@ -1,4 +1,3 @@
-export * from './backend-br';
-export * from './frontend-br';
-export * from './jerimum-jobs';
-export * from './posts';
+export * from './job-fetchers/backendbr-job-fetcher';
+export * from './job-fetchers/frontendbr-job-fetcher';
+export * from './posts/post-service';

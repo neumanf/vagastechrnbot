@@ -6,4 +6,5 @@ export const config = {
     botToken: process.env.BOT_TOKEN ?? '',
     channelId: process.env.CHANNEL_ID ?? '',
     dbUrl: process.env.DATABASE_URL ?? '',
+    channelPostingRoutineCron: process.env.CHANNEL_POSTING_ROUTINE_CRON ?? '0 */3 * * *'
 };

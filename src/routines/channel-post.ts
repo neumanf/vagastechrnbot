@@ -2,41 +2,39 @@ import { bot } from '../core/bot';
 import { config } from '../config';
 import { Job } from '../core/types/job';
 import {
-    BackendBrService,
-    JerimumJobsService,
+    BackendBrJobFetcher,
     PostsService,
-    FrontendBrService,
+    FrontendBrJobFetcher,
 } from '../services';
 import { logger } from '../logger/logger';
+import { setTimeout } from 'timers/promises';
+
+const POSTING_DELAY_IN_MS = 1000;
 
 export async function channelPostRoutine() {
     logger.info("Starting channel posting routine");
 
-    const jerimumJobsService = new JerimumJobsService();
-    const backendBrService = new BackendBrService();
-    const frontendBrService = new FrontendBrService();
+    const backendBrService = new BackendBrJobFetcher();
+    const frontendBrService = new FrontendBrJobFetcher();
     const postsService = new PostsService();
 
     const [posts, ...jobs] = await Promise.all([
         postsService.getPostUrls(),
-        jerimumJobsService.getJobs(),
-        backendBrService.getJobs(),
-        frontendBrService.getJobs(),
+        backendBrService.fetch(),
+        frontendBrService.fetch(),
     ]);
     const allJobs = jobs.flat();
-    logger.info(`Found ${allJobs.length} jobs`);
+    logger.info(`Found ${allJobs.length} new jobs`);
 
     const postsUrls = posts.map((post) => post.url);
 
     for (const job of allJobs) {
-        const wasPostedToday =
-            job.date.toDateString() === new Date().toDateString();
+        const existsInTheDatabase = postsUrls.includes(job.url);
 
-        if (!wasPostedToday) continue;
-        if (postsUrls.includes(job.url)) continue;
+        if (existsInTheDatabase) continue;
 
         const message = getPostMessage(job);
-        const provider = getProvider(job.url);
+        const provider = job.provider;
 
         try {
             logger.info(`Posting new job with URL "${job.url}"`);
@@ -47,6 +45,8 @@ export async function channelPostRoutine() {
                     parse_mode: 'HTML',
                 }),
             ]);
+
+            setTimeout(POSTING_DELAY_IN_MS, () => { });
         } catch (e) {
             logger.error("Error while posting jobs", e);
         }
@@ -69,25 +69,8 @@ function getPostMessage(job: Job) {
         optional('Nível de experiência', job.level) +
         required(
             'Data',
-            `${job.date.getDate()}/${
-                job.date.getMonth() + 1
+            `${job.date.getDate()}/${job.date.getMonth() + 1
             }/${job.date.getFullYear()}`
         )
     );
-}
-
-function getProvider(url: string): string {
-    if (url.startsWith('https://jerimumjobs.imd.ufrn.br')) {
-        return 'jerimumjobs';
-    }
-
-    if (url.startsWith('https://github.com/backend-br/vagas')) {
-        return 'backend-br';
-    }
-
-    if (url.startsWith('https://github.com/frontendbr/vagas')) {
-        return 'frontendbr';
-    }
-
-    return '';
 }

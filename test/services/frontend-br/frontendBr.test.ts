@@ -1,10 +1,10 @@
-import { FrontendBrService } from '../../../src/services/frontend-br';
+import { FrontendBrJobFetcher } from '../../../src/services/job-fetchers/frontendbr-job-fetcher';
 
 describe('FrontendBrService', () => {
     it('should return a list of job posts', async () => {
-        const frontendBrService = new FrontendBrService();
+        const frontendBrService = new FrontendBrJobFetcher();
 
-        const jobs = await frontendBrService.getJobs();
+        const jobs = await frontendBrService.fetch();
         const firstJob = jobs[0];
 
         expect(jobs).toBeDefined();

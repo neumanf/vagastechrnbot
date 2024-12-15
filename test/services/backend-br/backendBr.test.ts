@@ -1,10 +1,10 @@
-import { BackendBrService } from '../../../src/services';
+import { BackendBrJobFetcher } from '../../../src/services';
 
 describe('BackendBrService', () => {
     it('should return a list of job posts', async () => {
-        const backendBrService = new BackendBrService();
+        const backendBrService = new BackendBrJobFetcher();
 
-        const jobs = await backendBrService.getJobs();
+        const jobs = await backendBrService.fetch();
         const firstJob = jobs[0];
 
         expect(jobs).toBeDefined();
