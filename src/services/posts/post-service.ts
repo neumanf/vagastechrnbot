@@ -3,7 +3,7 @@ import { Post } from '../../core/types/post';
 
 export class PostsService {
     async getPostUrls() {
-        const PROVIDERS = ['frontend-br', 'backend-br'];
+        const PROVIDERS = ['frontend-br', 'backend-br', 'remotar'];
 
         return Posts()
             .select('url')

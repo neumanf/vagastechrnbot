@@ -8,6 +8,7 @@ import {
 } from '../services';
 import { logger } from '../logger/logger';
 import { setTimeout } from 'timers/promises';
+import { RemotarJobFetcher } from '../services/job-fetchers/remotar-job-fetcher';
 
 const POSTING_DELAY_IN_MS = 1000;
 
@@ -16,12 +17,14 @@ export async function channelPostRoutine() {
 
     const backendBrService = new BackendBrJobFetcher();
     const frontendBrService = new FrontendBrJobFetcher();
+    const remotarService = new RemotarJobFetcher();
     const postsService = new PostsService();
 
     const [posts, ...jobs] = await Promise.all([
         postsService.getPostUrls(),
         backendBrService.fetch(),
         frontendBrService.fetch(),
+        remotarService.fetch()
     ]);
     const allJobs = jobs.flat();
     logger.info(`Found ${allJobs.length} new jobs`);

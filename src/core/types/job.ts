@@ -8,7 +8,7 @@ export class Job {
     date: Date;
     url: string;
 
-    provider: string; 
+    provider: string;
 
     constructor(name: string, field: string, date: Date, url: string, company?: string, workType?: string, salary?: string, level?: string) {
         this.name = name;
@@ -26,9 +26,13 @@ export class Job {
         if (this.url.startsWith('https://github.com/backend-br/vagas')) {
             return 'backend-br';
         }
-    
+
         if (this.url.startsWith('https://github.com/frontendbr/vagas')) {
             return 'frontendbr';
+        }
+
+        if (this.url.startsWith('https://remotar.com.br')) {
+            return 'remotar';
         }
 
         return 'unknown';

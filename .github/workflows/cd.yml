@@ -33,7 +33,7 @@ jobs:
         run: |
           cd $HOME/vagastechrnbot &&
           docker compose pull &&
-          docker compose up -d
+          docker compose up --build -d
 
       - name: Run migrations
         run: docker exec vagastechrnbot-bot-1 /bin/sh -c "npm run migrate"
