@@ -2,21 +2,13 @@ import { Posts } from '../../core/database';
 import { Post } from '../../core/types/post';
 
 export class PostsService {
-    async getPostUrls() {
-        const PROVIDERS = ['frontend-br', 'backend-br', 'remotar'];
+    async getPostUrlsFromToday() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
         return Posts()
             .select('url')
-            .union(
-                PROVIDERS.map((p) =>
-                    Posts()
-                        .select('url')
-                        .where({ provider: p })
-                        .orderBy('id', 'desc')
-                        .limit(10)
-                ),
-                true
-            );
+            .where('date', '>', today);
     }
 
     async addPost(post: Omit<Post, 'id'>) {

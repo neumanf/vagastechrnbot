@@ -21,7 +21,7 @@ export async function channelPostRoutine() {
     const postsService = new PostsService();
 
     const [posts, ...jobs] = await Promise.all([
-        postsService.getPostUrls(),
+        postsService.getPostUrlsFromToday(),
         backendBrService.fetch(),
         frontendBrService.fetch(),
         remotarService.fetch()
