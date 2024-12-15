@@ -1,5 +1,3 @@
-import { Request, Response } from 'express';
-
 import { bot } from '../core/bot';
 import { config } from '../config';
 import { Job } from '../core/types/job';
@@ -9,8 +7,11 @@ import {
     PostsService,
     FrontendBrService,
 } from '../services';
+import { logger } from '../logger/logger';
 
-export async function channelPostRoutine(req: Request, res: Response) {
+export async function channelPostRoutine() {
+    logger.info("Starting channel posting routine");
+
     const jerimumJobsService = new JerimumJobsService();
     const backendBrService = new BackendBrService();
     const frontendBrService = new FrontendBrService();
@@ -22,9 +23,12 @@ export async function channelPostRoutine(req: Request, res: Response) {
         backendBrService.getJobs(),
         frontendBrService.getJobs(),
     ]);
+    const allJobs = jobs.flat();
+    logger.info(`Found ${allJobs.length} jobs`);
+
     const postsUrls = posts.map((post) => post.url);
 
-    for (const job of jobs.flat()) {
+    for (const job of allJobs) {
         const wasPostedToday =
             job.date.toDateString() === new Date().toDateString();
 
@@ -34,15 +38,19 @@ export async function channelPostRoutine(req: Request, res: Response) {
         const message = getPostMessage(job);
         const provider = getProvider(job.url);
 
-        await Promise.all([
-            postsService.addPost({ ...job, provider }),
-            bot.api.sendMessage(config.channelId, message, {
-                parse_mode: 'HTML',
-            }),
-        ]);
-    }
+        try {
+            logger.info(`Posting new job with URL "${job.url}"`);
 
-    return res.status(200).send({ ok: true });
+            await Promise.all([
+                postsService.addPost({ ...job, provider }),
+                bot.api.sendMessage(config.channelId, message, {
+                    parse_mode: 'HTML',
+                }),
+            ]);
+        } catch (e) {
+            logger.error("Error while posting jobs", e);
+        }
+    }
 }
 
 function getPostMessage(job: Job) {
