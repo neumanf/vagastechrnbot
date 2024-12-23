@@ -69,11 +69,6 @@ function getPostMessage(job: Job) {
         optional('Empresa', job.company) +
         optional('Regime', job.workType) +
         optional('Salário', job.salary) +
-        optional('Nível de experiência', job.level) +
-        required(
-            'Data',
-            `${job.date.getDate()}/${job.date.getMonth() + 1
-            }/${job.date.getFullYear()}`
-        )
+        optional('Nível de experiência', job.level)
     );
 }
