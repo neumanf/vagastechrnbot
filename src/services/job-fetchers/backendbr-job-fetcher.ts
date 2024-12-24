@@ -36,7 +36,12 @@ export class BackendBrJobFetcher implements JobFetcher {
     }
 
     private buildJob(issue: GithubIssuesResponse): Job {
-        const job = new Job(issue.title, 'Desenvolvimento', new Date(issue.created_at), issue.html_url);
+        const job = new Job.Builder()
+        .withTitle(issue.title)
+        .withDate(new Date(issue.created_at))
+        .withUrl(issue.html_url)
+        .withProvider('backendbr')
+        .build();
 
         for (const label of issue.labels) {
             switch (label.name) {

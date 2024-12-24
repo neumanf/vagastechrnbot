@@ -20,8 +20,9 @@ export class ProgramathorJobFetcher implements JobFetcher {
     async fetch(): Promise<Job[]> {
         const jobs: Job[] = [];
 
+        const browser = await puppeteer.launch(puppeteerLaunchSettings);
+
         try {
-            const browser = await puppeteer.launch(puppeteerLaunchSettings);
             const page = await browser.newPage();
 
             await page.goto(this.URL);
@@ -69,10 +70,21 @@ export class ProgramathorJobFetcher implements JobFetcher {
             logger.error("Error while fetching Programathor jobs", e);
         }
 
+        await browser.close();
+
         return jobs;
     }
 
     private buildJob(post: ProgramathorPost): Job {
-        return new Job(post.title, 'Desenvolvimento', new Date(), this.BASE_URL + post.path, post.company, post.workType, post.salary, post.level);
+        return new Job.Builder()
+            .withTitle(post.title)
+            .withDate(new Date())
+            .withUrl(this.BASE_URL + post.path)
+            .withWorkType(post.workType)
+            .withCompany(post.company)
+            .withSalary(post.salary)
+            .withLevel(post.level)
+            .withProvider('programathor')
+            .build();
     }
 }

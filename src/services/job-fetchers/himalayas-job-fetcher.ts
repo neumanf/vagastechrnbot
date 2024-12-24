@@ -18,12 +18,13 @@ export class HimalayasJobFetcher implements JobFetcher {
     async fetch(): Promise<Job[]> {
         const jobs: Job[] = [];
 
+        const browser = await puppeteer.launch(puppeteerLaunchSettings);
+
         try {
-            const browser = await puppeteer.launch(puppeteerLaunchSettings);
             const page = await browser.newPage();
 
             await page.goto(this.URL);
-            await page.waitForSelector('.bg-hero-gradient');
+            await page.waitForSelector('article');
 
             const posts: HimalayasPost[] = await page.$$eval('article', posts => {
                 return posts.map(post => {
@@ -56,10 +57,18 @@ export class HimalayasJobFetcher implements JobFetcher {
             logger.error("Error while fetching Himalayas jobs", e);
         }
 
+        await browser.close();
+
         return jobs;
     }
 
     private buildJob(post: HimalayasPost): Job {
-        return new Job(post.title, 'Desenvolvimento', new Date(), this.BASE_URL + post.path, post.company);
+        return new Job.Builder()
+            .withTitle(post.title)
+            .withDate(new Date())
+            .withUrl(this.BASE_URL + post.path)
+            .withCompany(post.company)
+            .withProvider('himalayas')
+            .build();
     }
 }

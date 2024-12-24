@@ -70,9 +70,8 @@ function getPostMessage(job: Job): string {
         field ? `<b>${title}:</b> ${field}\n` : '';
 
     return (
-        `👨‍💻 <a href="${job.url}">${job.name}</a>\n` +
+        `👨‍💻 <a href="${job.url}">${job.title}</a>\n` +
         '\n' +
-        required('Área', job.field) +
         optional('Empresa', job.company) +
         optional('Regime', job.workType) +
         optional('Salário', job.salary) +
