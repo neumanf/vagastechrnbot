@@ -11,6 +11,7 @@ import { setTimeout } from 'timers/promises';
 import { RemotarJobFetcher } from '../services/job-fetchers/remotar-job-fetcher';
 import { ProgramathorJobFetcher } from '../services/job-fetchers/programathor-job-fetcher';
 import { HimalayasJobFetcher } from '../services/job-fetchers/himalayas-job-fetcher';
+import { log } from 'console';
 
 const POSTING_DELAY_IN_MS = 1000;
 
@@ -19,20 +20,23 @@ export async function channelPostRoutine() {
 
     const postsService = new PostsService();
 
-    const backendBrJobFetcher = new BackendBrJobFetcher();
-    const frontendBrJobFetcher = new FrontendBrJobFetcher();
-    const remotarJobFetcher = new RemotarJobFetcher();
-    const programathorJobFetcher = new ProgramathorJobFetcher();
-    const himalayasJobFetcher = new HimalayasJobFetcher();
+    const posts = await postsService.getPostUrlsFromToday();
 
-    const [posts, ...jobs] = await Promise.all([
-        postsService.getPostUrlsFromToday(),
-        backendBrJobFetcher.fetch(),
-        frontendBrJobFetcher.fetch(),
-        remotarJobFetcher.fetch(),
-        programathorJobFetcher.fetch(),
-        himalayasJobFetcher.fetch()
-    ]);
+    const jobs: Job[][] = [];
+
+    const fetchers = [
+        new BackendBrJobFetcher(),
+        new FrontendBrJobFetcher(),
+        new RemotarJobFetcher(),
+        new ProgramathorJobFetcher(),
+        new HimalayasJobFetcher()
+    ];
+
+    for (const fetcher of fetchers) {
+        logger.info(`Fetching jobs using ${fetcher.constructor.name}`)
+        jobs.push(await fetcher.fetch());
+    }
+
     const allJobs = jobs.flat();
     logger.info(`Found ${allJobs.length} new jobs`);
 
