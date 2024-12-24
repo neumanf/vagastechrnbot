@@ -2,13 +2,15 @@ import { Posts } from '../../core/database';
 import { Post } from '../../core/types/post';
 
 export class PostsService {
-    async getPostUrlsFromToday() {
+    async getPostUrlsFromThisMonth(): Promise<string[]> {
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const lastMonth = new Date(today.getFullYear(), today.getMonth() > 0 ? today.getMonth() - 1 : 11, today.getDate());
 
-        return Posts()
+        const posts = await Posts()
             .select('url')
-            .where('date', '>', today);
+            .where('date', '>', lastMonth);
+
+        return posts.map(post => post.url);
     }
 
     async addPost(post: Omit<Post, 'id'>) {

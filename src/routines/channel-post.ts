@@ -11,7 +11,6 @@ import { setTimeout } from 'timers/promises';
 import { RemotarJobFetcher } from '../services/job-fetchers/remotar-job-fetcher';
 import { ProgramathorJobFetcher } from '../services/job-fetchers/programathor-job-fetcher';
 import { HimalayasJobFetcher } from '../services/job-fetchers/himalayas-job-fetcher';
-import { log } from 'console';
 
 const POSTING_DELAY_IN_MS = 1000;
 
@@ -20,7 +19,7 @@ export async function channelPostRoutine() {
 
     const postsService = new PostsService();
 
-    const posts = await postsService.getPostUrlsFromToday();
+    const postsUrls = await postsService.getPostUrlsFromThisMonth();
 
     const jobs: Job[][] = [];
 
@@ -39,8 +38,6 @@ export async function channelPostRoutine() {
 
     const allJobs = jobs.flat();
     logger.info(`Found ${allJobs.length} new jobs`);
-
-    const postsUrls = posts.map((post) => post.url);
 
     for (const job of allJobs) {
         const existsInTheDatabase = postsUrls.includes(job.url);
