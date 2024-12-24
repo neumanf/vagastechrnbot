@@ -10,24 +10,28 @@ import { logger } from '../logger/logger';
 import { setTimeout } from 'timers/promises';
 import { RemotarJobFetcher } from '../services/job-fetchers/remotar-job-fetcher';
 import { ProgramathorJobFetcher } from '../services/job-fetchers/programathor-job-fetcher';
+import { HimalayasJobFetcher } from '../services/job-fetchers/himalayas-job-fetcher';
 
 const POSTING_DELAY_IN_MS = 1000;
 
 export async function channelPostRoutine() {
     logger.info("Starting channel posting routine");
 
+    const postsService = new PostsService();
+
     const backendBrJobFetcher = new BackendBrJobFetcher();
     const frontendBrJobFetcher = new FrontendBrJobFetcher();
     const remotarJobFetcher = new RemotarJobFetcher();
     const programathorJobFetcher = new ProgramathorJobFetcher();
-    const postsService = new PostsService();
+    const himalayasJobFetcher = new HimalayasJobFetcher();
 
     const [posts, ...jobs] = await Promise.all([
         postsService.getPostUrlsFromToday(),
         backendBrJobFetcher.fetch(),
         frontendBrJobFetcher.fetch(),
         remotarJobFetcher.fetch(),
-        programathorJobFetcher.fetch()
+        programathorJobFetcher.fetch(),
+        himalayasJobFetcher.fetch()
     ]);
     const allJobs = jobs.flat();
     logger.info(`Found ${allJobs.length} new jobs`);
