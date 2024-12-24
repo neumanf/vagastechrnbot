@@ -20,8 +20,9 @@ export class RemotarJobFetcher implements JobFetcher {
     async fetch(): Promise<Job[]> {
         const jobs: Job[] = [];
 
+        const browser = await puppeteer.launch(puppeteerLaunchSettings);
+
         try {
-            const browser = await puppeteer.launch(puppeteerLaunchSettings);
             const page = await browser.newPage();
 
             await page.goto(this.URL);
@@ -55,30 +56,39 @@ export class RemotarJobFetcher implements JobFetcher {
 
                 jobs.push(job);
             }
-
-            await browser.close();
         } catch (e) {
             logger.error("Error while fetching Remotar jobs", e);
         }
+
+        await browser.close();
 
         return jobs;
     }
 
     private buildJob(post: RemotarPost): Job {
-        const job = new Job(post.title, 'Desenvolvimento', new Date(), this.BASE_URL + post.path, post.company);
+        let workType = "";
+        let level = "";
 
         for (const label of post.tags) {
             if (label.includes('CLT') || label.includes('PJ') || label.includes('Freelancer')) {
-                const workType = StringUtils.removeEmojis(label).trim();
-                job.workType = job.workType ? `${job.workType}, ${workType}` : workType;
+                const parsedWorkType = StringUtils.removeEmojis(label).trim();
+                workType = workType ? `${workType}, ${parsedWorkType}` : parsedWorkType;
             }
 
             if (label.includes('Júnior') || label.includes('Pleno') || label.includes('Sênior')) {
-                const level = StringUtils.removeEmojis(label).trim();
-                job.level = job.level ? `${job.level}, ${level}` : level;
+                const parsedLevel = StringUtils.removeEmojis(label).trim();
+                level = level ? `${level}, ${parsedLevel}` : parsedLevel;
             }
         }
 
-        return job;
+        return new Job.Builder()
+            .withTitle(post.title)
+            .withDate(new Date())
+            .withUrl(this.BASE_URL + post.path)
+            .withCompany(post.company)
+            .withWorkType(workType)
+            .withLevel(level)
+            .withProvider('remotar')
+            .build();
     }
 } 

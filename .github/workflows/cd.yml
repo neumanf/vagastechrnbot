@@ -36,4 +36,4 @@ jobs:
           docker compose up --build -d
 
       - name: Run migrations
-        run: docker exec vagastechrnbot-bot-1 /bin/sh -c "npm run migrate"
+        run: docker exec vagastechrnbot-bot-1 /bin/sh -c "npm run migration:migrate"

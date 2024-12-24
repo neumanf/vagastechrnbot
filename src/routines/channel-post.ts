@@ -9,23 +9,34 @@ import {
 import { logger } from '../logger/logger';
 import { setTimeout } from 'timers/promises';
 import { RemotarJobFetcher } from '../services/job-fetchers/remotar-job-fetcher';
+import { ProgramathorJobFetcher } from '../services/job-fetchers/programathor-job-fetcher';
+import { HimalayasJobFetcher } from '../services/job-fetchers/himalayas-job-fetcher';
+import { log } from 'console';
 
 const POSTING_DELAY_IN_MS = 1000;
 
 export async function channelPostRoutine() {
     logger.info("Starting channel posting routine");
 
-    const backendBrService = new BackendBrJobFetcher();
-    const frontendBrService = new FrontendBrJobFetcher();
-    const remotarService = new RemotarJobFetcher();
     const postsService = new PostsService();
 
-    const [posts, ...jobs] = await Promise.all([
-        postsService.getPostUrlsFromToday(),
-        backendBrService.fetch(),
-        frontendBrService.fetch(),
-        remotarService.fetch()
-    ]);
+    const posts = await postsService.getPostUrlsFromToday();
+
+    const jobs: Job[][] = [];
+
+    const fetchers = [
+        new BackendBrJobFetcher(),
+        new FrontendBrJobFetcher(),
+        new RemotarJobFetcher(),
+        new ProgramathorJobFetcher(),
+        new HimalayasJobFetcher()
+    ];
+
+    for (const fetcher of fetchers) {
+        logger.info(`Fetching jobs using ${fetcher.constructor.name}`)
+        jobs.push(await fetcher.fetch());
+    }
+
     const allJobs = jobs.flat();
     logger.info(`Found ${allJobs.length} new jobs`);
 
@@ -56,24 +67,18 @@ export async function channelPostRoutine() {
     }
 }
 
-function getPostMessage(job: Job) {
+function getPostMessage(job: Job): string {
     const required = (title: string, field: string) =>
         `<b>${title}:</b> ${field}\n`;
     const optional = (title: string, field?: string) =>
         field ? `<b>${title}:</b> ${field}\n` : '';
 
     return (
-        `👨‍💻 <a href="${job.url}">${job.name}</a>\n` +
+        `👨‍💻 <a href="${job.url}">${job.title}</a>\n` +
         '\n' +
-        required('Área', job.field) +
         optional('Empresa', job.company) +
         optional('Regime', job.workType) +
         optional('Salário', job.salary) +
-        optional('Nível de experiência', job.level) +
-        required(
-            'Data',
-            `${job.date.getDate()}/${job.date.getMonth() + 1
-            }/${job.date.getFullYear()}`
-        )
+        optional('Nível de experiência', job.level)
     );
 }

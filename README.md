@@ -21,7 +21,7 @@ docker-compose up
 npm install
 
 # Execute as migrações do banco de dados
-npm run migrate
+npm run migration:migrate
 
 # Inicie o bot em modo de desenvolvimento
 npm run dev
