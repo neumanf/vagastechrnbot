@@ -1,14 +1,12 @@
 import { JobFetcher } from "./job-fetcher";
-import puppeteer from "puppeteer";
-import { puppeteerLaunchSettings } from "../../config/puppeteer";
 import { logger } from "../../logger/logger";
 import { Job } from "../../core/types/job";
+import * as cheerio from "cheerio";
 
 type HimalayasPost = {
     title: string;
     path: string;
     company: string;
-    time: string;
 }
 
 export class HimalayasJobFetcher implements JobFetcher {
@@ -18,46 +16,34 @@ export class HimalayasJobFetcher implements JobFetcher {
     async fetch(): Promise<Job[]> {
         const jobs: Job[] = [];
 
-        const browser = await puppeteer.launch(puppeteerLaunchSettings);
-
         try {
-            const page = await browser.newPage();
+            const response = await fetch(this.URL);
+            const html = await response.text();
+            const $ = cheerio.load(html);
 
-            await page.goto(this.URL);
-            await page.waitForSelector('article');
+            const posts: HimalayasPost[] = [];
 
-            const posts: HimalayasPost[] = await page.$$eval('article', posts => {
-                return posts.map(post => {
-                    const titleWrapper = post.querySelector('a');
-                    const path = titleWrapper?.getAttribute('href');
-                    const time = post.querySelector('time')?.textContent;
-                    const company = post.querySelector('div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > a:nth-child(1)')?.textContent;
+            $('article').each((_, post) => {
+                const titleWrapper = $(post).children('div:nth-child(2)').children('div:first').children('a');
+                const title = $(titleWrapper).text().trim();
+                const path = $(titleWrapper).attr('href') ?? "";
+                const company = $(post).children('div:nth-child(2)').children('div:nth-child(2)').children('div:first').children('a').text();
 
-                    const result = {
-                        title: titleWrapper?.textContent ?? "",
-                        path: path ?? "",
-                        company: company ?? "",
-                        time: time ?? "",
-                    }
-
-                    return result;
+                posts.push({
+                    title,
+                    path,
+                    company,
                 })
             })
 
             for (const post of posts) {
                 if (!post || !post.title) continue;
 
-                const wasPostedToday = post.time.includes("hours ago");
-
-                if (!wasPostedToday) continue;
-
                 jobs.push(this.buildJob(post));
             }
         } catch (e) {
             logger.error("Error while fetching Himalayas jobs", e);
         }
-
-        await browser.close();
 
         return jobs;
     }

@@ -37,7 +37,7 @@ export async function channelPostRoutine() {
     }
 
     const allJobs = jobs.flat();
-    logger.info(`Found ${allJobs.length} new jobs`);
+    logger.info(`Found ${allJobs.length} jobs`);
 
     for (const job of allJobs) {
         const existsInTheDatabase = postsUrls.includes(job.url);
