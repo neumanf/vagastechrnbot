@@ -3,6 +3,7 @@ import { Job } from "../../core/types/job";
 import { JobFetcher } from "./job-fetcher";
 import { puppeteerLaunchSettings } from "../../config/puppeteer";
 import { logger } from "../../logger/logger";
+import * as cheerio from 'cheerio';
 
 type ProgramathorPost = {
     title: string;
@@ -20,44 +21,46 @@ export class ProgramathorJobFetcher implements JobFetcher {
     async fetch(): Promise<Job[]> {
         const jobs: Job[] = [];
 
-        const browser = await puppeteer.launch(puppeteerLaunchSettings);
-
         try {
-            const page = await browser.newPage();
+            const response = await fetch(this.URL);
+            const html = await response.text();
+            const $ = cheerio.load(html);
 
-            await page.goto(this.URL);
-            await page.waitForSelector('.cell-list');
+            const posts: ProgramathorPost[] = [];
 
-            const posts: ProgramathorPost[] = await page.$$eval('.cell-list', posts => {
-                return posts.map(post => {
-                    const titleWrapper = post.querySelector('h3');
-                    const path = post.querySelector('a')?.getAttribute('href');
-                    const infoWrapper = post.querySelectorAll('.cell-list-content-icon > span');
+            $('.cell-list').each((_, post) => {
+                const path = $(post).children('a:first').attr('href');
 
-                    const result = {
-                        title: titleWrapper?.textContent ?? "",
-                        path: path ?? "",
-                        company: "",
-                        salary: "",
-                        level: "",
-                        workType: ""
+                if (!path) return;
+
+                const title = $(post).find('h3').text();
+
+                let company = "";
+                let salary = "";
+                let level = "";
+                let workType = "";
+
+                $(post).find('span').each((_, span) => {
+                    const icon = $(span).children('i');
+
+                    if (icon.hasClass('fa-briefcase')) {
+                        company = $(span).text();
+                    } else if (icon.hasClass('fa-money-bill-alt')) {
+                        salary = $(span).text();
+                    } else if (icon.hasClass('fa-chart-bar')) {
+                        level = $(span).text();
+                    } else if (icon.hasClass('fa-file-alt')) {
+                        workType = $(span).text();
                     }
+                })
 
-                    infoWrapper.forEach(info => {
-                        const iconClasses = info.querySelector('i')?.className;
-
-                        if (iconClasses?.includes("briefcase")) {
-                            result.company = info.textContent ?? "";
-                        } else if (iconClasses?.includes("money")) {
-                            result.salary = info.textContent ?? "";
-                        } else if (iconClasses?.includes("chart")) {
-                            result.level = info.textContent ?? "";
-                        } else if (iconClasses?.includes("file")) {
-                            result.workType = info.textContent ?? "";
-                        }
-                    })
-
-                    return result;
+                posts.push({
+                    title,
+                    path,
+                    company,
+                    salary,
+                    level,
+                    workType
                 })
             })
 
@@ -69,8 +72,6 @@ export class ProgramathorJobFetcher implements JobFetcher {
         } catch (e) {
             logger.error("Error while fetching Programathor jobs", e);
         }
-
-        await browser.close();
 
         return jobs;
     }
