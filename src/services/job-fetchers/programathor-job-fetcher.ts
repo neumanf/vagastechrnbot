@@ -1,7 +1,5 @@
-import puppeteer from "puppeteer";
 import { Job } from "../../core/types/job";
 import { JobFetcher } from "./job-fetcher";
-import { puppeteerLaunchSettings } from "../../config/puppeteer";
 import { logger } from "../../logger/logger";
 import * as cheerio from 'cheerio';
 
@@ -33,7 +31,7 @@ export class ProgramathorJobFetcher implements JobFetcher {
 
                 if (!path) return;
 
-                const title = $(post).find('h3').text();
+                const title = $(post).find('h3').text().replace(/NOVA$/, "");
 
                 let company = "";
                 let salary = "";
