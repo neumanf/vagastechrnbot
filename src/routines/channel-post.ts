@@ -11,6 +11,7 @@ import { setTimeout } from 'timers/promises';
 import { RemotarJobFetcher } from '../services/job-fetchers/remotar-job-fetcher';
 import { ProgramathorJobFetcher } from '../services/job-fetchers/programathor-job-fetcher';
 import { HimalayasJobFetcher } from '../services/job-fetchers/himalayas-job-fetcher';
+import { SolidesVagasJobFetcher } from '../services/job-fetchers/solides-job-fetcher';
 
 const POSTING_DELAY_IN_MS = 1000;
 
@@ -28,7 +29,8 @@ export async function channelPostRoutine() {
         new FrontendBrJobFetcher(),
         new RemotarJobFetcher(),
         new ProgramathorJobFetcher(),
-        new HimalayasJobFetcher()
+        new HimalayasJobFetcher(),
+        new SolidesVagasJobFetcher()
     ];
 
     for (const fetcher of fetchers) {
@@ -59,7 +61,7 @@ export async function channelPostRoutine() {
 
             setTimeout(POSTING_DELAY_IN_MS, () => { });
         } catch (e) {
-            logger.error("Error while posting jobs", e);
+            logger.error("Error while posting job", e);
         }
     }
 }
