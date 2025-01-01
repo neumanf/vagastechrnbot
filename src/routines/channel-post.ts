@@ -12,6 +12,7 @@ import { RemotarJobFetcher } from '../services/job-fetchers/remotar-job-fetcher'
 import { ProgramathorJobFetcher } from '../services/job-fetchers/programathor-job-fetcher';
 import { HimalayasJobFetcher } from '../services/job-fetchers/himalayas-job-fetcher';
 import { SolidesVagasJobFetcher } from '../services/job-fetchers/solides-job-fetcher';
+import { databaseErrors } from '../core/database/errors';
 
 const POSTING_DELAY_IN_MS = 1000;
 
@@ -19,8 +20,6 @@ export async function channelPostRoutine() {
     logger.info("Starting channel posting routine");
 
     const postsService = new PostsService();
-
-    const postsUrls = await postsService.getPostUrlsFromThisMonth();
 
     const jobs: Job[][] = [];
 
@@ -42,25 +41,23 @@ export async function channelPostRoutine() {
     logger.info(`Found ${allJobs.length} jobs`);
 
     for (const job of allJobs) {
-        const existsInTheDatabase = postsUrls.includes(job.url);
-
-        if (existsInTheDatabase) continue;
-
         const message = getPostMessage(job);
         const provider = job.provider;
 
         try {
+            await postsService.addPost({ ...job, provider });
+
             logger.info(`Posting new job with URL "${job.url}"`);
 
-            await Promise.all([
-                postsService.addPost({ ...job, provider }),
-                bot.api.sendMessage(config.channelId, message, {
-                    parse_mode: 'HTML',
-                }),
-            ]);
+            await bot.api.sendMessage(config.channelId, message, {
+                parse_mode: 'HTML',
+            })
 
             setTimeout(POSTING_DELAY_IN_MS, () => { });
-        } catch (e) {
+        } catch (e: any) {
+            if (e.code === databaseErrors.UNIQUE) {
+                return;
+            }
             logger.error("Error while posting job", e);
         }
     }
