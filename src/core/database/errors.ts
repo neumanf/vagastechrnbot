@@ -1,3 +1,3 @@
 export const databaseErrors = {
-    UNIQUE: 23505
+    UNIQUE: '23505'
 }

@@ -13,6 +13,7 @@ import { ProgramathorJobFetcher } from '../services/job-fetchers/programathor-jo
 import { HimalayasJobFetcher } from '../services/job-fetchers/himalayas-job-fetcher';
 import { SolidesVagasJobFetcher } from '../services/job-fetchers/solides-job-fetcher';
 import { databaseErrors } from '../core/database/errors';
+import { StriderJobFetcher } from '../services/job-fetchers/strider-job-fetcher';
 
 const POSTING_DELAY_IN_MS = 1000;
 
@@ -29,7 +30,8 @@ export async function channelPostRoutine() {
         new RemotarJobFetcher(),
         new ProgramathorJobFetcher(),
         new HimalayasJobFetcher(),
-        new SolidesVagasJobFetcher()
+        new SolidesVagasJobFetcher(),
+        new StriderJobFetcher()
     ];
 
     for (const fetcher of fetchers) {
