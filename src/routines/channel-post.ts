@@ -43,6 +43,8 @@ export async function channelPostRoutine() {
     logger.info(`Found ${allJobs.length} jobs`);
 
     for (const job of allJobs) {
+        if (!job.company || config.blacklistedCompanies.includes(job.company)) continue;
+
         const message = getPostMessage(job);
         const provider = job.provider;
 

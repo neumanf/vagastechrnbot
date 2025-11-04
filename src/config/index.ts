@@ -5,6 +5,7 @@ export const config = {
     port: process.env.PORT ?? 3000,
     botToken: process.env.BOT_TOKEN ?? '',
     channelId: process.env.CHANNEL_ID ?? '',
+    blacklistedCompanies: process.env.BLACKLISTED_COMPANIES?.split(',') ?? [], 
     dbUrl: process.env.DATABASE_URL ?? '',
     channelPostingRoutineCron: process.env.CHANNEL_POSTING_ROUTINE_CRON ?? '0 */3 * * *'
 };
